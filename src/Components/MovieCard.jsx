@@ -1,17 +1,26 @@
 import React from 'react';
 import "../css/MovieCard.css";
+import { useMovies } from "../contexts/MovieContext"; // ✅ correct import
 
 function MovieCard({ movie }) {
-  function onFavouriteClick() {
-    alert("clicked");
+  const { isFavourite, addToFavourites, removeFromFavourites } = useMovies();
+  const favourite = isFavourite(movie.id);
+
+  function onFavouriteClick(e) {
+    e.preventDefault();
+    if (favourite) removeFromFavourites(movie.id);
+    else addToFavourites(movie);
   }
 
   return (
     <div className="movie-card">
       <div className="movie-poster">
         <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
-        <div className="movie-overlay"> {/* ✅ Fixed class name */}
-          <button className="favorite-btn" onClick={onFavouriteClick}> {/* ✅ Fixed class name */}
+        <div className="movie-overlay">
+          <button
+            className={`favorite-btn ${favourite ? "active" : ""}`}
+            onClick={onFavouriteClick}
+          >
             ♥
           </button>
         </div>
